@@ -1,17 +1,88 @@
 ## ARM Processor
 The fundamentals of an ARM processor.<br>
-Contents:
+Contents (*, skipped):
 ```
 Registers
 Current Program Status Register
-Pipeline
+* Pipeline
 Exceptions, Interrupts, and the Vector Table
 Core Extensions
-Architecture Revisions + ARM Processor Families
+* Architecture Revisions + ARM Processor Families
 ```
 
 ### RISC
 RISC stands for: Reduced Instruction Set Computer
 Supports:
-* load-store architecture
+* Load-store architecture
+  * !DMA (Direct Memory Access)
+* Utilizes registers for arithmetic & memory operations
 
+### ARM Core Dataflow
+![ARM core dataflow model](https://github.com/young170/2024-1-MA/edit/main/assets/images/ARM_core_dataflow_model.png)
+Interesting points:
+* Von Neumann architecture
+  * Data items and instructions share the same bus
+* Barrel shifter
+  * Can preprocess the $R_m$ register for a wider range of expressions & addresses
+
+## Registers
+Two kinds of registers:
+* $r_0-r_{15}$, 16 data registers
+* $cpsr, spsr$, 2 **program status registers**
+  * current & saved
+
+## Current Program Status Register
+![A generic program status register](https://github.com/young170/2024-1-MA/edit/main/assets/images/program_status_register.png)
+First, considering the *Control* field, the first four bits (starting form the LSb) represent the *Processor mode*<br>
+* privileged
+  * abort
+  * fast **interrupt** request
+  * **interrupt** request
+  * supervisor
+  * system
+  * undefined
+* nonprivileged
+  * user
+Each processor mode holds different sets of registers for their use<br>
+There are two separate modes that deal with interrupts. This is because ARM supports multiple levels (priorities) of interrupts<br>
+
+### Banked Registers
+There are acually a total of 37 registers in the register file. Among the registers, 20 of them are hidden at different times<br>
+The registers are swapped when an **interrupt** forces a mode change. The previously used registers are *banked* and replaced by the mode's registers<br>
+
+### State and Instruction Sets
+* ARM
+* Thumb
+  * 16-bit instruction version of ARM
+* Jazelle
+  * Provides execution of Java bytecodes
+ 
+### Interrupt Masks
+Used to stop specific interrupt requests from interrupting the processor
+* Mask either IRQ (interrupt request) or FIQ (fast interrupt request)
+
+### Condition Flags
+Helps boost optimization by updating condition flags based on the result of ALU operations that specify the `S` instruction suffix<br>
+
+## Exceptions, Interrupts, and the Vector Table
+
+### Nested Vectored Interrupt Controller
+**Nested**: there are multiple levels of priorites of interrupts<br>
+**Vectored**: using a **Vector Table**, the branch of ISR (Interrupt Service Routine) is determined
+* each entry consists of an *interrupt vector* pair: interrupt request - interrupt handler
+* address either starts at `0x00000000` or `0xffff0000`
+
+## Core Extensions
+Standard components placed next to the ARM core.
+
+### Cache and Tightly Coupled Memory
+Using the AMBA bus protocol, the *unified cache* works together with the ARM core<br>
+**Tightly coupled memory**: **guarantees** the clock cycles required to fetch instructions or data
+* Why is this important?
+  * For real-time algorithms, a deterministic behavior is critical
+ 
+### Memory Management
+**MMU** vs **MPU**
+* Memory management unit: provides **translation** from virtual-to-physical addresses.
+* Memory protection unit: each region is defined with specific access permissions.
+Difference is how memory is mapped.
