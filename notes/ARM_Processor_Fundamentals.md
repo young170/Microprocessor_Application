@@ -78,8 +78,11 @@ Helps boost optimization by updating condition flags based on the result of ALU 
 Standard components placed next to the ARM core.
 
 ### Cache and Tightly Coupled Memory
-Using the AMBA bus protocol, the *unified cache* works together with the ARM core<br>
-**Tightly coupled memory**: **guarantees** the clock cycles required to fetch instructions or data
+There are two versions of architectures: Von Neumann-style and Harvard-style<br>
+First, Von Neumann-style:<br>
+Using the AMBA (Advanced Microcontroller Bus Architecture) bus protocol, the *unified cache* works together with the ARM core<br>
+Compared to, Harvard-style:<br>
+Uses **tightly coupled memory** (TCM): **guarantees** the clock cycles required to fetch instructions or data
 * Why is this important?
   * For real-time algorithms, a deterministic behavior is critical
  
