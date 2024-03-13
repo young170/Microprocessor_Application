@@ -70,6 +70,8 @@ Helps boost optimization by updating condition flags based on the result of ALU 
 **Nested**: there are multiple levels of priorites of interrupts<br>
 **Vectored**: using a **Vector Table**, the branch of ISR (Interrupt Service Routine) is determined
 * each entry consists of an *interrupt vector* pair: interrupt request - interrupt handler
+  * the <interrupt handler> entry is actually in a form of a branch instruction
+  * the branch instruction points to the start of the specific interrupt's handler
 * address either starts at `0x00000000` or `0xffff0000`
 
 ## Core Extensions
