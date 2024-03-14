@@ -18,7 +18,7 @@ Supports:
 * Utilizes registers for arithmetic & memory operations
 
 ### ARM Core Dataflow
-![ARM core dataflow model](https://github.com/young170/2024-1-MA/edit/main/assets/images/ARM_core_dataflow_model.png)
+![ARM core dataflow model](https://github.com/young170/2024-1-MA/blob/main/assets/images/ARM_core_dataflow_model.png)
 Interesting points:
 * Von Neumann architecture
   * Data items and instructions share the same bus
@@ -32,7 +32,7 @@ Two kinds of registers:
   * current & saved
 
 ## Current Program Status Register
-![A generic program status register](https://github.com/young170/2024-1-MA/edit/main/assets/images/program_status_register.png)
+![A generic program status register](https://github.com/young170/2024-1-MA/blob/main/assets/images/program_status_register.png)
 First, considering the *Control* field, the first four bits (starting form the LSb) represent the *Processor mode*<br>
 * privileged
   * abort
