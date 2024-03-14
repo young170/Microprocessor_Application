@@ -65,6 +65,8 @@ Used to stop specific interrupt requests from interrupting the processor
 Helps boost optimization by updating condition flags based on the result of ALU operations that specify the `S` instruction suffix<br>
 The flags: NZCV, are useful when doing binary arithmetic<br>
 A result is confirmed negative when `Nv` or `nV`<br>
+The `Z` flag is very useful for distinguishing similar operations.<br>
+For example, there exists LT and GE. To implement a GT, a `z` flag is added into the condition flags to remove the equal condition.<br>
 
 ## Exceptions, Interrupts, and the Vector Table
 
