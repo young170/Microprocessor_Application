@@ -66,7 +66,15 @@ Helps boost optimization by updating condition flags based on the result of ALU 
 The flags: NZCV, are useful when doing binary arithmetic<br>
 A result is confirmed negative when `Nv` or `nV`<br>
 The `Z` flag is very useful for distinguishing similar operations.<br>
-For example, there exists LT and GE. To implement a GT, a `z` flag is added into the condition flags to remove the equal condition.<br>
+For example, there exists LT and GE. To implement a GT, a `z` flag is added into the condition flags to remove the equal condition.
+
+Flags are updated during *Data Processing Instructions* such as, `MOV` or `ADD`.<br>
+However, the `{S}` optional syntax needs to be specified. For conditional instructions (e.g. `AND`, `ORR`) this is not needed.
+```
+Syntax: <instruction>{cond}{S} Rd, Rn, Rm
+```
+
+There are 15 conditional flag combinations, but 4-bits are used. The last combination of `1111` means "always execute" disregarding conditions.<br>
 
 ## Exceptions, Interrupts, and the Vector Table
 
@@ -93,5 +101,9 @@ Uses **tightly coupled memory** (TCM): **guarantees** the clock cycles required 
 ### Memory Management
 **MMU** vs **MPU**
 * Memory management unit: provides **translation** from virtual-to-physical addresses.
+  * Can load more complex OS such as Linux.
 * Memory protection unit: each region is defined with specific access permissions.
 Difference is how memory is mapped.
+
+## Miscellaneous
+* big.LITTLE
