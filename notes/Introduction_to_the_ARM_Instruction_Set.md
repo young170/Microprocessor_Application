@@ -1,6 +1,4 @@
-
 ## Load-Store Instructions
-
 use {S} to update nczv flags.
 * flags are not cleared after the instruction
   * to preserve the use of the flags
@@ -8,10 +6,6 @@ use {S} to update nczv flags.
 
 also, carry from `ADD` is stored in a single bit. why? 32 + 32 is max 33
 an application of this is `ADDS` -> `ADC`
-
-* mutex on pre-ARMv6 using `SWP`: [Linus Torvalds](https://lore.kernel.org/all/Pine.LNX.4.64.0512172150260.26663@localhost.localdomain/)
-
-long pipeline (e.g. ARMv10) has another step before execution so `pc` is +8 of the current instruction (next next instruction).
 
 ### Load/Store Multiple Registers
 The ARM architecture supports load/store of multiple registers using a single instruction. To support this a different instruction format is used.<br>
@@ -22,10 +16,33 @@ Also, learned about *register spilling*. This is when a desired register is alre
 
 #### Why offsets?
 Using offsets utilize the register ordering (done by the processor) better, and can handle discontinuous registers.<br>
-First, because the registers are saved in order (r1 -> r15) the offset grows at a constant direction. This heavily simplifies the complexity of using offsets to address.<br>
+First, because the registers are saved in order (R1 -> R15) the offset grows at a constant direction. This heavily simplifies the complexity of using offsets to address.<br>
 Second, one can imagine there could be cases where the registers are listed in a discontinuous fashion (e.g. {R1, R3, R4, R6}). This amplifies the usage of offsets.<br>
 
 ## Semaphore
+* mutex on pre-ARMv6 using `SWP`: [Linus Torvalds](https://lore.kernel.org/all/Pine.LNX.4.64.0512172150260.26663@localhost.localdomain/)
+
+Big picture:
+* read lock value
+* load current lock value, and store `#1` to lock **atomically**
+  * `SWP` supports this
+* if lock value is `#1`, then spin
+* else, hold lock and access critical section
+
+To implement the mutex in a more semaphore-like way:<br>
+Create an array of semaphores and when using the `SWP` operation:
+```
+MOV R0, #0x0
+...acquire()...
+SWP ... [semaphores, R0, LSL #2]
+
+or
+
+MOV R0, #0x1
+...acquire()...
+SWP ... [semaphores, R0, LSL #2]
+```
+This effectively gives the index for the desired semaphore.
 
 ## Software Interrupt (SWI) Instruction
 Basic flow:<br>
@@ -34,3 +51,8 @@ When an interrupt occurs, the mode is switched to the interrupt handling mode, b
 
 ## Miscellaneous
 ### PC-relative addressing
+When `PC` + 8 is the next instruction how is the actual next instruction (PC + 4) stored?
+![mips_pipeline](https://github.com/young170/2024-1-MA/blob/main/assets/images/mips_pipeline.png)
+Using an example from MIPS: when the current code is executed in the `EX` stage, the PC in the `IF` stage is **relatively** + 8.<br>
+Also, one can see there already is an instruction in the `ID` stage which is the actual next instruction, PC + 4.<br>
+In conclusion, PC + 8 is just the POV from the EX stage.
