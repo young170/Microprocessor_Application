@@ -53,6 +53,7 @@ When an interrupt occurs, the mode is switched to the interrupt handling mode, b
 ### PC-relative addressing
 When `PC` + 8 is the next instruction how is the actual next instruction (PC + 4) stored?
 ![mips_pipeline](https://github.com/young170/2024-1-MA/blob/main/assets/images/mips_pipeline.png)
+
 Using an example from MIPS: when the current code is executed in the `EX` stage, the PC in the `IF` stage is **relatively** + 8.<br>
 Also, one can see there already is an instruction in the `ID` stage which is the actual next instruction, PC + 4.<br>
 In conclusion, PC + 8 is just the POV from the EX stage.
