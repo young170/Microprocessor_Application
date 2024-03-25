@@ -1,3 +1,24 @@
+## Branch Instructions
+### `BX` vs `BLX`
+Using `BX`, normal ARM2Thumb transition would be the following:
+```
+ MOV lr, pc
+ BX foo
+
+foo
+ ...
+ BX lr
+```
+However, using `BLX`:
+```
+ BLX foo
+
+foo
+ ...
+ BX lr
+```
+The process of loading `lr` is skipped. Combined as one instruction of `BLX`.
+
 ## Load-Store Instructions
 use {S} to update nczv flags.
 * flags are not cleared after the instruction
@@ -18,6 +39,13 @@ Also, learned about *register spilling*. This is when a desired register is alre
 Using offsets utilize the register ordering (done by the processor) better, and can handle discontinuous registers.<br>
 First, because the registers are saved in order (R1 -> R15) the offset grows at a constant direction. This heavily simplifies the complexity of using offsets to address.<br>
 Second, one can imagine there could be cases where the registers are listed in a discontinuous fashion (e.g. {R1, R3, R4, R6}). This amplifies the usage of offsets.<br>
+
+### Loading Constants
+The ARM instruction architecture doesn't support constants of 32 bits because the instruction format itself is 32 bits long.<br>
+Uses a total 3 methods:
+1. Use the barrel shifter to create the desired 32 bit constant (requires the least amount of cycles)
+2. Use `MOV` or `MVN` to store constants in memory. Then use the registers with the constant values
+3. Use PC-relative addressing to use constants
 
 ## Semaphore
 * mutex on pre-ARMv6 using `SWP`: [Linus Torvalds](https://lore.kernel.org/all/Pine.LNX.4.64.0512172150260.26663@localhost.localdomain/)
