@@ -1,4 +1,30 @@
+## Data Processing Instructions
+### SUBS
+```
+PRE:
+R0 = 0x00000001
+cpsr = nzcv
+
+SUBS R0, R0, #1
+
+POST:
+R0 = 0x00000000
+cpsr = nZCv
+```
+Why is the `C` flag set?<br>
+Subtraction is translated into the addition of the 2nd operand's two's complement. 
+
 ## Branch Instructions
+
+### `BX`
+The following is how the `BX` instruction works
+```
+pc = Rm & 0xfffffffe, T = Rm & 1
+```
+All instructions ignore `bit[0]` (lsb) write (PC-relative addressing) on the upper 31 bits. This is because the PC is incremented by `0x4`.<br>
+To specify a change in the execution state (e.g. ARM2Thumb) the `bit[0]` must be set to 1.<br>
+Then, by bit masking, it is set back to 0 to preserve the correct use of the PC.
+
 ### `BX` vs `BLX`
 Using `BX`, normal ARM2Thumb transition would be the following:
 ```
