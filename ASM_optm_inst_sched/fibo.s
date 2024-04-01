@@ -1,27 +1,30 @@
-start   
-        MOV     R0, #5
-        BL      fibo
-        B       end_pgm
+start         
+              MOV     R0, #6
+              BL      fibo
+              B       end_pgm
 
-fibo    
-        STMFD   SP!, {R0-R1, LR}
-        CMP     R0, #1
-        MOVEQ   R3, #1
-        MOVLT   R3, #0
-        BLE     done
+fibo          
+              STMFD   SP!, {R0-R2, LR}
+              CMP     R0, #1
+              MOVEQ   R3, #1
+              MOVLT   R3, #0
+              BLE     done
 
-        SUB     R0, R0, #1
-        BL      fibo
-        MOV     R1, R3 ; return value to R1
+              SUB     R0, R0, #1
+              BL      fibo
+              MOV     R2, R3
 
-        SUB     R0, R0, #1
-        BL      fibo
+              SUB     R0, R0, #1
+              BL      fibo
 
-        ADD     R3, R1, R3 ; fibo(n - 1) + fibo(n - 2)
+              ADD     R3, R2, R3
 
-done    
-        LDMFD   SP!, {R0-R1, LR}
-        MOV     PC, LR
+less_than_two 
 
-end_pgm ;       end of program
+
+done          
+              LDMFD   SP!, {R0-R2, LR}
+              MOV     PC, LR
+
+end_pgm       ;       end of program
 
