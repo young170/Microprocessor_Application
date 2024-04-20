@@ -49,10 +49,10 @@
         <configuration Name="Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="ass_1_3.s">
-        <configuration Name="Debug" build_exclude_from_build="No" />
+        <configuration Name="Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="ass_1_4.s">
-        <configuration Name="Debug" build_exclude_from_build="Yes" />
+        <configuration Name="Debug" build_exclude_from_build="No" />
       </file>
       <file file_name="lab_1.s">
         <configuration Name="Debug" build_exclude_from_build="Yes" />
