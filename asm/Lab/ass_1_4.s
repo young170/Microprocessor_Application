@@ -70,7 +70,7 @@ LED_OFF:
 LED_TOGGLE:
   LDR R1, [R0, #GPIO_OUT_OFFSET]
 
-  EOR R2, R1, R3 // EOR OUT : LED_MASK
+  EOR R2, R1, R3 // EOR only applied to given LED_MASK (R3)
 
   STR R2, [R0, #GPIO_OUT_OFFSET]
   MOV PC, LR
@@ -99,4 +99,4 @@ BTN_WAIT:
   LDRNE R3, =LED4_MASK
   MOVNE PC, LR
 
-  BEQ BTN_WAIT // either BTN not pressed
+  BEQ BTN_WAIT // BTN not pressed
