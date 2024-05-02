@@ -31,6 +31,7 @@ Purpose : Generic application start
 #define GPIO_DIRSET_REG_OFFSET 0x0518
 
 volatile void SETTINGS (void);
+void volatile DELAY(void);
 volatile void WAIT_INPUT_PUSH(void);
 volatile uint32_t change_led_mask (uint32_t);
 volatile void control_led_output (uint32_t);
@@ -54,6 +55,9 @@ main(void)
     if (curr_led_state > 0b11) {
       curr_led_state = 0b00;
     }
+
+    // delay
+    DELAY();
 
     // on push event
     WAIT_INPUT_PUSH();
@@ -81,6 +85,18 @@ SETTINGS ()
 
   volatile uint32_t *pin_cnf_11 = (uint32_t *)(GPIO_P0_BASE + GPIO_PIN_CNF_11_OFFSET);
   *pin_cnf_11 = 0x0003000c;
+}
+
+void volatile DELAY() {
+  __asm volatile (
+      "LDR R2, =1600000\n"
+    "DELAY_LOOP:\n\t"
+      "CMP R2, #0\n\t"
+      "ITT NE\n\t"
+      "SUBNE R2, R2, #1\n\t"
+      "BNE DELAY_LOOP\n\t"
+      //"MOV PC, LR\n\t"
+  );
 }
 
 volatile void

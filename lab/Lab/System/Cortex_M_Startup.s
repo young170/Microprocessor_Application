@@ -157,6 +157,13 @@ _vectors:
         //   ISR_HANDLER ExternalISR2
         //   ISR_HANDLER ExternalISR3
         //
+        ISR_RESERVED // user-defined interrupt 0
+        ISR_RESERVED // user-defined interrupt 1
+        ISR_RESERVED // user-defined interrupt 2
+        ISR_RESERVED // user-defined interrupt 3
+        ISR_RESERVED // user-defined interrupt 4
+        ISR_RESERVED // user-defined interrupt 5
+        .word (GPIOTE_Handler + 1) // user-defined interrupt 6, THUMB-mode
 
         .section .vectors, "a"
         .size _vectors, .-_vectors

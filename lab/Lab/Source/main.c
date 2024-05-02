@@ -10,12 +10,8 @@ Purpose : Generic application start
 
 */
 
-#include <stdint.h>
-
-void volatile SET_DIR_PIN(void);
-void volatile DELAY(void);
-void volatile LED_OFF(void);
-void volatile LED_ON(void);
+#include <stdio.h>
+#include <stdlib.h>
 
 /*********************************************************************
 *
@@ -25,53 +21,14 @@ void volatile LED_ON(void);
 *   Application entry point.
 */
 int main(void) {
-  SET_DIR_PIN();
+  int i;
 
-  while (1) {
-    LED_OFF();
-    DELAY();
-    LED_ON();
-    DELAY();
+  for (i = 0; i < 100; i++) {
+    printf("Hello World %d!\n", i);
   }
-}
-
-volatile void
-SET_DIR_PIN() {
-  __asm volatile (
-    "LDR R0, =0x50000000\n\t"
-    "LDR R1, =0x02000\n\t"
-    "STR R1, [R0, #0x514]\n\t"
-  );
-}
-
-void volatile DELAY() {
-  __asm volatile (
-      "LDR R2, =16000000\n"
-    "DELAY_LOOP:\n\t"
-      "CMP R2, #0\n\t"
-      "ITT NE\n\t"
-      "SUBNE R2, R2, #1\n\t"
-      "BNE DELAY_LOOP\n\t"
-      //"MOV PC, LR\n\t"
-  );
-}
-
-void volatile LED_OFF() {
-  __asm volatile (
-    "LDR R0, =0x50000000\n\t"
-    "LDR R1, =0x02000\n\t"
-    "STR R1, [R0, #0x508]\n\t"
-    //"MOV PC, LR\n\t"
-  );
-}
-
-void volatile LED_ON() {
-  __asm volatile (
-    "LDR R0, =0x50000000\n\t"
-    "LDR R1, =0x02000\n\t"
-    "STR R1, [R0, #0x50C]\n\t"
-    //"MOV PC, LR\n\t"
-  );
+  do {
+    i++;
+  } while (1);
 }
 
 /*************************** End of file ****************************/
