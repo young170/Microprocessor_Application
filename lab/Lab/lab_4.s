@@ -38,7 +38,7 @@ SET_OUT_PIN:
 // PIN_CNF
 // A = 0(input), B = 0(connect input buffer), CC = 3(pull up), DDD = 0(standard 0 and 1), EE = 3(SENS for LOW)
 // configs BTN as input, pulls up (active-low, high has undetermined value), reading value is either 0 or 1, not used
-// 0000 0000 0000 0011 0000 0000 0000 0000 0011 = 0x0003000C
+// 0000 0000 0000 0011 0000 0000 0000 0000 1100 = 0x0003000C
 CONF_BTN_PIN:
   LDR R1, =0x0003000C
   STR R1, [R0, #GPIO_PIN_CNF_11_OFFSET]

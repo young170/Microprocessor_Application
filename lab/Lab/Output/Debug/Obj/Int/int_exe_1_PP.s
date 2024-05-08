@@ -1,0 +1,153 @@
+# 1 "/Users/gimseongbin/Documents/SEGGER Embedded Studio for ARM Projects/Lab/int_exe_1.s"
+# 1 "<built-in>" 1
+# 1 "/Users/gimseongbin/Documents/SEGGER Embedded Studio for ARM Projects/Lab/int_exe_1.s" 2
+
+.thumb
+.thumb_func
+
+.equ BTN1_MASK, 0x00800
+.equ BTN2_MASK, 0x01000
+.equ LED1_MASK, 0x02000
+.equ LED2_MASK, 0x04000
+.equ LED3_MASK, 0x08000
+.equ LED4_MASK, 0x10000
+
+.equ GPIO_P0_BASE, 0x50000000
+.equ GPIO_DIRSET_REG_OFFSET, 0x518
+.equ GPIO_OUT_REG_OFFSET, 0x504
+.equ GPIO_OUTSET_REG_OFFSET, 0x508
+.equ GPIO_PIN_CNF_11_OFFSET, 0x72C
+
+.equ GPIOTE_BASE, 0x40006000
+.equ GPIOTE_INTENSET_OFFSET, 0x304
+.equ GPIOTE_CONFIG_OFFSET, 0x510
+.equ GPIOTE_EVENT_IN_OFFSET, 0x100
+
+.equ NVIC_ISER, 0xE000E100
+.equ NVIC_IPR, 0xE000E400
+
+.section .text
+.global main
+
+main:
+  BL GPIO_SETUP
+  BL GPIOTE_SETUP
+  BL NVIC_SETUP
+  WFI
+  B .
+
+
+
+GPIO_SETUP:
+
+  LDR R0, =GPIO_P0_BASE
+  LDR R1, =LED1_MASK
+  STR R1, [R0, #GPIO_DIRSET_REG_OFFSET]
+
+  LDR R1, =LED1_MASK
+  STR R1, [R0, #GPIO_OUTSET_REG_OFFSET]
+
+
+  LDR R1, =0x0003000c
+
+  STR R1, [R0, #GPIO_PIN_CNF_11_OFFSET]
+
+  MOV PC,LR
+
+GPIOTE_SETUP:
+
+  LDR R0, =GPIOTE_BASE
+
+
+
+
+  MOV R1, #0x01
+  STR R1, [R0, #GPIOTE_INTENSET_OFFSET]
+
+
+
+
+  MOV R1, #0x01
+  MOV R2, #11
+  LSL R2, R2, #8
+  ORR R1, R1, R2
+
+  MOV R2, #0x0
+  LSL R2, R2, #13
+  ORR R1, R1, R2
+
+  MOV R2, #0x02
+  LSL R2, R2, #16
+  ORR R1, R1, R2
+
+
+  STR R1, [R0, #GPIOTE_CONFIG_OFFSET]
+
+  BX LR
+
+NVIC_SETUP:
+
+
+
+  LDR R0, =NVIC_ISER
+
+
+  MOV R1, #(1<<6)
+  STR R1, [R0]
+
+
+
+  LDR R0, =NVIC_IPR
+
+
+  MOV R1, #0x02
+  STR R1, [R0, #6]
+
+  BX LR
+
+DELAY:
+  LDR R2, =64000000
+COUNT_DOWN:
+  CMP R2, #0
+  ITT NE
+  SUBNE R2, R2, #1
+  BNE COUNT_DOWN
+  MOV PC, LR
+
+ledControl:
+  LDR R0, =GPIO_P0_BASE
+  LDR R1, [R0, #GPIO_OUT_REG_OFFSET]
+  OR R2, #LED1_MASK, #LED2_MASK
+  EOR R1, R1, R2
+  STR R1, [R0, #GPIO_OUT_REG_OFFSET]
+  BX LR
+
+.global GPIOTE_Handler
+GPIOTE_Handler:
+
+  PUSH {LR}
+
+
+
+  MOV R1, #0x0
+  LDR R0, =GPIOTE_BASE
+  LDR R2, [R0, #GPIOTE_EVENT_IN_OFFSET]
+
+  CMP R1, R2
+
+  BEQ EXIT_GPIOTE_Handler
+
+  BL ledControl
+
+
+
+  MOV R1, #0x0
+  LDR R0, =GPIOTE_BASE
+  STR R1, [R0, #GPIOTE_EVENT_IN_OFFSET]
+
+EXIT_GPIOTE_Handler:
+
+  POP {LR}
+
+
+  BX LR

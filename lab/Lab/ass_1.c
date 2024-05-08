@@ -90,7 +90,7 @@ SETTINGS ()
 void volatile DELAY() {
   __asm volatile (
       "LDR R2, =1600000\n"
-    "DELAY_LOOP:\n\t"
+      "DELAY_LOOP:\n\t"
       "CMP R2, #0\n\t"
       "ITT NE\n\t"
       "SUBNE R2, R2, #1\n\t"

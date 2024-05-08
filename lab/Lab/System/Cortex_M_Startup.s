@@ -163,7 +163,7 @@ _vectors:
         ISR_RESERVED // user-defined interrupt 3
         ISR_RESERVED // user-defined interrupt 4
         ISR_RESERVED // user-defined interrupt 5
-        .word (GPIOTE_Handler + 1) // user-defined interrupt 6, THUMB-mode
+        //.word (GPIOTE_Handler + 1) // user-defined interrupt 6, THUMB-mode
 
         .section .vectors, "a"
         .size _vectors, .-_vectors
